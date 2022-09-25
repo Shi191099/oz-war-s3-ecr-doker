@@ -30,8 +30,7 @@ pipeline {
                        sh 'echo "Uploading content with AWS creds"'
                        //sh 'aws s3 ls'
                        sh 'aws s3 cp target/*.war s3://s3-copy-one-2-one'
-                    //   s3Upload(pathStyleAccessEnabled: true, payloadSigningEnabled: true, file:'target/*.war', bucket:'s3-copy-one-2-one')
-                  }    
+                  }
             }
         }
         stage('Docker Build and Tag') {
@@ -45,6 +44,6 @@ pipeline {
                       sh "docker run -d -p 8081:8080 --rm --name ozsh oz-sample:latest"
                       }
               }
-        }      
+        }
     }
 }
