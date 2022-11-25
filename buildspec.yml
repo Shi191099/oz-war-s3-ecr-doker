@@ -10,5 +10,5 @@ phases:
       - echo Build completed successfully
 artifacts:
   files:
-    - target/maven-web-application.war
+    - **/*.war
   discard-paths: yes
