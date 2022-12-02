@@ -1,14 +1,21 @@
 version: 0.2
 
 phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 805392809179.dkr.ecr.ap-south-1.amazonaws.com
+      - REPOSITORY_URI=805392809179.dkr.ecr.ap-south-1.amazonaws.com/oz-java-img
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
-      - echo Entered the build phase...
-      - mvn clean package
+      - echo Pull started on `date`
+      - echo pulling the Docker image...
+      - docker pull $REPOSITORY_URI:latest
+
   post_build:
     commands:
-      - echo Build completed successfully
-artifacts:
-  files:
-    - target/*.war
-  discard-paths: yes
+      - echo Pull completed on `date`
+      - docker run -td -P $REPOSITORY_URI:latest
